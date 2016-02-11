@@ -98,7 +98,7 @@ public class MouseTracker extends MouseAdapter {
 			System.out.println("Empty area.");
 			return null;
 		} else {
-			// System.out.println(String.format("%s %s %s %s", x, y, width, height));
+			System.out.println(String.format("%s %s %s %s", x, y, width, height));
 			return new Rectangle(x, y, width, height);
 		}
 

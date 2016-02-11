@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 /**
  * 
@@ -39,8 +42,9 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 	}
 
 	private void initUI() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// setLocationRelativeTo(null);
+		setLocation(30, 30);
 		addKeyListener(this);
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
@@ -56,9 +60,25 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 		setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		imagePanel = new ImagePanel();
 		layeredPane.add(imagePanel);
+
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent we) {
+				String ObjButtons[] = { "Yes", "No" };
+				int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?",
+						"Prompt", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+						ObjButtons, ObjButtons[1]);
+				if (PromptResult == 0) {
+					System.out.println(console.dumpText());
+					System.exit(0);
+				}
+			}
+		});
+
 		setVisible(true);
 	}
-	
+
 	private void initConsole() {
 		console = new ConsoleUI();
 	}
@@ -69,6 +89,7 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 	}
 
 	private void loadImage() {
+		System.out.println("Load Image: " + currentFile.getName());
 		try {
 			image = ImageIO.read(currentFile);
 		} catch (IOException ex) {
@@ -107,32 +128,25 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 		if (currentFile == null) {
 			return;
 		}
-		
+
 		List<Rectangle> markings = mouseTracker.getMarkings();
-		System.out.print(currentFile.getName() + " ");
 		console.append(currentFile.getName() + " ");
 		int size = markings.size();
 		if (size == 0) {
 			// print nothing.
-		} else {			
-			System.out.print(size);
+		} else {
 			console.append(size + "");
 		}
 		for (Rectangle m : markings) {
-			System.out.print(String.format(" %d %d %d %d", (int) m.getX(), (int) m.getY(), (int) m.getWidth(),
-					(int) m.getHeight()));
-			
 			console.append(String.format(" %d %d %d %d", (int) m.getX(), (int) m.getY(), (int) m.getWidth(),
 					(int) m.getHeight()));
 		}
-		System.out.println();
 		console.append("\n");
 	}
 
 	private void loadNextFile() {
 		do {
 			if (nextIndex >= files.length) {
-				// System.out.println("No more files.");
 				mouseTracker.resetMarkings();
 				System.out.println("Finished all images.");
 				currentFile = null;
