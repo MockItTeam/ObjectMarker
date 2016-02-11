@@ -1,15 +1,27 @@
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MouseTracker extends MouseAdapter {
 
 	private Point firstCoor;
 	private Point lastCoor;
 	private CoordinateLabel coorLabel;
+	private List<Rectangle> markings;
 
 	public MouseTracker(CoordinateLabel coorLabel) {
 		this.coorLabel = coorLabel;
+	}
+	
+	public void resetMarkings() {
+		markings = new ArrayList<Rectangle>();
+	}
+	
+	public List<Rectangle> getMarkings() {
+		return markings;
 	}
 
 	@Override
@@ -19,9 +31,8 @@ public class MouseTracker extends MouseAdapter {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-
 		lastCoor = new Point(e.getX(), e.getY());
-		calculateMarking();
+		markings.add(calculateMarking());
 	}
 
 	@Override
@@ -40,7 +51,7 @@ public class MouseTracker extends MouseAdapter {
 		coorLabel.repaint();
 	}
 
-	private void calculateMarking() {
+	private Rectangle calculateMarking() {
 		int x, y, width, height;
 		int x0, y0, x1, y1;
 
@@ -76,8 +87,10 @@ public class MouseTracker extends MouseAdapter {
 		
 		if (width == 0 || height == 0) {
 			System.out.println("Empty area.");
+			return null;
 		} else {
-			System.out.println(String.format("%s %s %s %s", x, y, width, height));			
+			// System.out.println(String.format("%s %s %s %s", x, y, width, height));
+			return new Rectangle(x, y, width, height);
 		}
 
 	}
