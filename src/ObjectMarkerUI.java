@@ -1,9 +1,10 @@
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,25 +45,10 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 
 		JLayeredPane layeredPane = getRootPane().getLayeredPane();
 		layeredPane.add(coorLabel, JLayeredPane.DRAG_LAYER);
-
-		addMouseMotionListener(new MouseMotionAdapter() {
-			
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				updateCoordinate(e);
-			}
-			
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				
-				updateCoordinate(e);
-			}
-			
-			private void updateCoordinate(MouseEvent e) {
-				coorLabel.setCoordinate(e.getX(), e.getY());
-				coorLabel.repaint();
-			}
-		});
+		
+		MouseTracker mouseTracker = new MouseTracker(coorLabel);
+		addMouseListener(mouseTracker);
+		addMouseMotionListener(mouseTracker);
 
 		setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		imagePanel = new ImagePanel();
