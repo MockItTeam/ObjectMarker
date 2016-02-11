@@ -21,6 +21,7 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 
 	private static final long serialVersionUID = 1L;
 
+	private ConsoleUI console;
 	private CoordinateLabel coorLabel;
 	private BufferedImage image;
 	private ImagePanel imagePanel;
@@ -31,12 +32,13 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 
 	public ObjectMarkerUI() {
 		super("Object Marker");
-		init();
+		initUI();
+		initConsole();
 		loadFolder("/Users/mapfap/Desktop/images");
 		loadNextFile(); // initiate first load.
 	}
 
-	private void init() {
+	private void initUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		addKeyListener(this);
@@ -55,6 +57,10 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 		imagePanel = new ImagePanel();
 		layeredPane.add(imagePanel);
 		setVisible(true);
+	}
+	
+	private void initConsole() {
+		console = new ConsoleUI();
 	}
 
 	private void loadFolder(String folderPath) {
@@ -98,20 +104,29 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 	}
 
 	private void exportAllMarkings() {
+		if (currentFile == null) {
+			return;
+		}
+		
 		List<Rectangle> markings = mouseTracker.getMarkings();
 		System.out.print(currentFile.getName() + " ");
+		console.append(currentFile.getName() + " ");
 		int size = markings.size();
 		if (size == 0) {
 			// print nothing.
 		} else {			
-			System.out.print(markings.size());
+			System.out.print(size);
+			console.append(size + "");
 		}
 		for (Rectangle m : markings) {
 			System.out.print(String.format(" %d %d %d %d", (int) m.getX(), (int) m.getY(), (int) m.getWidth(),
 					(int) m.getHeight()));
+			
+			console.append(String.format(" %d %d %d %d", (int) m.getX(), (int) m.getY(), (int) m.getWidth(),
+					(int) m.getHeight()));
 		}
 		System.out.println();
-
+		console.append("\n");
 	}
 
 	private void loadNextFile() {
@@ -119,8 +134,8 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 			if (nextIndex >= files.length) {
 				// System.out.println("No more files.");
 				mouseTracker.resetMarkings();
-				System.exit(0);
-				System.out.println("Finised all images. Program terminated.");
+				System.out.println("Finished all images.");
+				currentFile = null;
 				return;
 			}
 			currentFile = files[nextIndex];

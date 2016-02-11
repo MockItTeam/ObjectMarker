@@ -5,6 +5,11 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Sarun Wongtanakarn
+ *
+ */
 public class MouseTracker extends MouseAdapter {
 
 	private Point firstCoor;
@@ -32,7 +37,10 @@ public class MouseTracker extends MouseAdapter {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		lastCoor = new Point(e.getX(), e.getY());
-		markings.add(calculateMarking());
+		Rectangle marking = calculateMarking();
+		if (marking != null) {
+			markings.add(marking);
+		}
 	}
 
 	@Override
@@ -51,6 +59,7 @@ public class MouseTracker extends MouseAdapter {
 		coorLabel.repaint();
 	}
 
+	// TODO: Need some unit tests here !
 	private Rectangle calculateMarking() {
 		int x, y, width, height;
 		int x0, y0, x1, y1;
