@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 
 import javax.swing.JComponent;
 
@@ -19,9 +20,9 @@ public class CoordinateLabel extends JComponent {
 		setBackground(Color.blue);
 	}
 	
-	public void setCoordinate(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public void setCoordinate(Point coor) {
+		x = coor.x;
+		y = coor.y;
 	}
 
 	@Override

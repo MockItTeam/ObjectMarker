@@ -52,14 +52,16 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 
 		JLayeredPane layeredPane = getRootPane().getLayeredPane();
 		layeredPane.add(coorLabel, JLayeredPane.DRAG_LAYER);
-
-		mouseTracker = new MouseTracker(coorLabel);
-		addMouseListener(mouseTracker);
-		addMouseMotionListener(mouseTracker);
-
+		
 		setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		imagePanel = new ImagePanel();
 		layeredPane.add(imagePanel);
+
+		mouseTracker = new MouseTracker(coorLabel, imagePanel);
+		addMouseListener(mouseTracker);
+		addMouseMotionListener(mouseTracker);
+
+		
 
 		addWindowListener(new WindowAdapter() {
 
@@ -138,8 +140,7 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 			console.append(size + "");
 		}
 		for (Rectangle m : markings) {
-			console.append(String.format(" %d %d %d %d", (int) m.getX(), (int) m.getY(), (int) m.getWidth(),
-					(int) m.getHeight()));
+			console.append(String.format(" %d %d %d %d", m.x, m.y, m.width, m.height));
 		}
 		console.append("\n");
 	}

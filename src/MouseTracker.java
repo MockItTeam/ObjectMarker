@@ -16,30 +16,40 @@ public class MouseTracker extends MouseAdapter {
 	private Point lastCoor;
 	private CoordinateLabel coorLabel;
 	private List<Rectangle> markings;
+	private ImagePanel imagePanel;
 
-	public MouseTracker(CoordinateLabel coorLabel) {
+	public MouseTracker(CoordinateLabel coorLabel, ImagePanel imagePanel) {
 		this.coorLabel = coorLabel;
+		this.imagePanel = imagePanel;
 	}
 	
 	public void resetMarkings() {
 		markings = new ArrayList<Rectangle>();
+		imagePanel.draw(markings);
 	}
 	
 	public List<Rectangle> getMarkings() {
 		return markings;
 	}
+	
+	private Point getCalibratedCoordination(MouseEvent e) {
+		// Y axis is shifted by 20
+		// TODO: Find why 20 !
+		return new Point(e.getX(), e.getY() - 20);
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		firstCoor = new Point(e.getX(), e.getY());
+		firstCoor = getCalibratedCoordination(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		lastCoor = new Point(e.getX(), e.getY());
+		lastCoor = getCalibratedCoordination(e);
 		Rectangle marking = calculateMarking();
 		if (marking != null) {
 			markings.add(marking);
+			imagePanel.draw(markings);
 		}
 	}
 
@@ -50,12 +60,12 @@ public class MouseTracker extends MouseAdapter {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-
 		updateCoordinate(e);
 	}
 
 	private void updateCoordinate(MouseEvent e) {
-		coorLabel.setCoordinate(e.getX(), e.getY());
+		// TODO: Why 20?
+		coorLabel.setCoordinate(getCalibratedCoordination(e));
 		coorLabel.repaint();
 	}
 
