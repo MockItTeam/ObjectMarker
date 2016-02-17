@@ -100,8 +100,8 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 			ex.printStackTrace();
 		}
 
-		int width = image.getWidth();
-		int height = image.getHeight();
+		int width = (int) (image.getWidth() * ObjectMarkerUI.SCALE);
+		int height = (int) (image.getHeight() * ObjectMarkerUI.SCALE);
 
 		mouseTracker.resetMarkings();
 
