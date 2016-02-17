@@ -37,15 +37,20 @@ public class MouseTracker extends MouseAdapter {
 		// TODO: Find why 20 !
 		return new Point(e.getX(), e.getY() - 20);
 	}
+	
+	private Point getScaledCalibratedCoordination(MouseEvent e) {
+		Point p = getCalibratedCoordination(e);
+		return new Point((int)(p.x / ObjectMarkerUI.SCALE), (int) (p.y / ObjectMarkerUI.SCALE));
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		firstCoor = getCalibratedCoordination(e);
+		firstCoor = getScaledCalibratedCoordination(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		lastCoor = getCalibratedCoordination(e);
+		lastCoor = getScaledCalibratedCoordination(e);
 		Rectangle marking = calculateMarking();
 		if (marking != null) {
 			markings.add(marking);

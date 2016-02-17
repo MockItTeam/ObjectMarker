@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -32,6 +33,7 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 	private File[] files;
 	private File currentFile;
 	private int nextIndex = 0;
+	public static final float SCALE = 0.1f;
 
 	public ObjectMarkerUI() {
 		super("Object Marker");
@@ -155,7 +157,7 @@ public class ObjectMarkerUI extends JFrame implements KeyListener {
 			}
 			currentFile = files[nextIndex];
 			nextIndex += 1;
-		} while (!currentFile.getName().toLowerCase().contains(".png"));
+		} while (!currentFile.getName().toLowerCase().contains(".jpg"));
 
 		loadImage();
 	}

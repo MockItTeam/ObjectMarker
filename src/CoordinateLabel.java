@@ -15,20 +15,25 @@ public class CoordinateLabel extends JComponent {
 	
 	private int x;
 	private int y;
+	
+	private int actualX;
+	private int actualY;
 
 	public CoordinateLabel() {
 		setBackground(Color.blue);
 	}
 	
 	public void setCoordinate(Point coor) {
-		x = coor.x;
-		y = coor.y;
+		x = (int) coor.x;
+		y = (int) coor.y;
+		actualX = (int) (coor.x / ObjectMarkerUI.SCALE);
+		actualY = (int) (coor.y / ObjectMarkerUI.SCALE);
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		String s = x + ", " + y;
+		String s = actualX + ", " + actualY;
 		g.setColor(Color.red);
 		g.drawString(s, x, y);
 	}
